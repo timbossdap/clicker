@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #2a2a2a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1600px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: start;
+            padding: 20px;
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 48px;
+            color: #14a085;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .multiplier-display {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .multiplier-text {
+            font-size: 18px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .rebirth-text {
+            font-size: 16px;
+            color: #ff69b4;
+            font-weight: bold;
+        }
+
+        .left-panel, .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        button {
+            padding: 15px 20px;
+            border: 2px solid;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 160px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .multiplier-btn {
+            background-color: #ffa500;
+            border-color: #cc8400;
+            color: white;
+            width: 160px;
+            height: 120px;
+        }
+
+        .multiplier-btn:hover:not(:disabled) {
+            background-color: #ff9500;
+        }
+
+        .multiplier-btn:active:not(:disabled) {
+            background-color: #ffaa00;
+        }
+
+        .reset-btn {
+            background-color: #3a3a3a;
+            border-color: #666666;
+            color: white;
+            width: 160px;
+            height: 80px;
+            font-size: 16px;
+        }
+
+        .reset-btn:hover:not(:disabled) {
+            background-color: #5a5a5a;
+        }
+
+        .rebirth-btn {
+            background-color: #ff1493;
+            border-color: #c71585;
+            color: white;
+            width: 160px;
+            height: 120px;
+        }
+
+        .rebirth-btn:hover:not(:disabled) {
+            background-color: #ff69b4;
+        }
+
+        .rebirth-btn:active:not(:disabled) {
+            background-color: #ff1493;
+        }
+
+        .shop-btn {
+            background-color: #9932cc;
+            border-color: #8b008b;
+            color: white;
+            width: 160px;
+            height: 120px;
+        }
+
+        .shop-btn:hover:not(:disabled) {
+            background-color: #ba55d3;
+        }
+
+        .shop-btn:active:not(:disabled) {
+            background-color: #9370db;
+        }
+
+        .click-btn {
+            background-color: #14a085;
+            border-color: #0d7377;
+            color: white;
+            width: 280px;
+            height: 280px;
+            font-size: 48px;
+            border-width: 4px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .click-btn:hover {
+            background-color: #0d7377;
+        }
+
+        .click-btn:active {
+            background-color: #00d9ff;
+        }
+
+        .shop-panel {
+            background-color: #333333;
+            border: 2px solid #9932cc;
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .shop-title {
+            font-size: 24px;
+            color: #9932cc;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .shop-tokens {
+            font-size: 16px;
+            color: #ff69b4;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .gacha-pack {
+            width: 180px;
+            height: 100px;
+            font-size: 12px;
+        }
+
+        .common-pack {
+            background-color: #4169e1;
+            border-color: #00008b;
+        }
+
+        .common-pack:hover:not(:disabled) {
+            background-color: #6495ed;
+        }
+
+        .rare-pack {
+            background-color: #ffa500;
+            border-color: #ff8c00;
+        }
+
+        .rare-pack:hover:not(:disabled) {
+            background-color: #daa520;
+        }
+
+        .epic-pack {
+            background-color: #ff1493;
+            border-color: #c71585;
+        }
+
+        .epic-pack:hover:not(:disabled) {
+            background-color: #ff69b4;
+        }
+
+        .legendary-pack {
+            background-color: #ffd700;
+            border-color: #daa520;
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .legendary-pack:hover:not(:disabled) {
+            background-color: #ffed4e;
+        }
+
+        .close-btn {
+            background-color: #3a3a3a;
+            border-color: #666666;
+            color: white;
+            width: 180px;
+            height: 50px;
+            font-size: 14px;
+        }
+
+        .close-btn:hover:not(:disabled) {
+            background-color: #555555;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel, .right-panel {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .center-panel {
+                order: -1;
+            }
+
+            .shop-panel {
+                order: 1;
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="score" id="score">Score: 0</div>
+            <div class="multiplier-display" id="multiplierDisplay"></div>
+        </div>
+
+        <div class="left-panel">
+            <button class="multiplier-btn" id="btn1">2x Multiplier<br>(20)</button>
+            <button class="multiplier-btn" id="btn2">2x Multiplier<br>(200)</button>
+            <button class="multiplier-btn" id="btn3">2x Multiplier<br>(2000)</button>
+            <button class="multiplier-btn" id="btn4">2x Multiplier<br>(20000)</button>
+            <button class="reset-btn" id="resetBtn">Reset</button>
+            <button class="rebirth-btn" id="rebirthBtn">Rebirth<br>(1M)</button>
+            <button class="shop-btn" id="shopBtn">Gacha Shop<br>(0 tokens)</button>
+        </div>
+
+        <div class="center-panel">
+            <button class="click-btn" id="clickBtn">Click Me!</button>
+        </div>
+
+        <div class="right-panel" id="rightPanel" style="display: none;">
+            <div class="shop-panel">
+                <div class="shop-title">GACHA SHOP</div>
+                <div class="shop-tokens" id="shopTokens">Tokens: 0</div>
+
+                <button class="gacha-pack common-pack" id="commonPack">Common Pack<br>(1 token)<br>+0.1x</button>
+                <button class="gacha-pack rare-pack" id="rarePack">Rare Pack<br>(2 tokens)<br>+0.3x</button>
+                <button class="gacha-pack epic-pack" id="epicPack">Epic Pack<br>(3 tokens)<br>+0.8x</button>
+                <button class="gacha-pack legendary-pack" id="legendaryPack">Legendary<br>(5 tokens)<br>+2.0x</button>
+
+                <button class="close-btn" id="closeShopBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        const state = {
+            score: 0,
+            multiplier1: 1.0,
+            multiplier2: 1.0,
+            multiplier3: 1.0,
+            multiplier4: 1.0,
+            rebirthMultiplier: 1.0,
+            rebirthTokens: 0,
+            shopOpen: false
+        };
+
+        // Utility functions
+        function formatNumber(num) {
+            if (num >= 1e12) return (num / 1e12).toFixed(2) + "T";
+            if (num >= 1e9) return (num / 1e9).toFixed(2) + "B";
+            if (num >= 1e6) return (num / 1e6).toFixed(2) + "M";
+            if (num >= 1e3) return (num / 1e3).toFixed(2) + "K";
+            return Math.floor(num).toString();
+        }
+
+        function getRebirthCost() {
+            if (state.rebirthTokens === 0) return 1e6;
+            return Math.pow(1e6, Math.pow(1.5, state.rebirthTokens));
+        }
+
+        function updateDisplay() {
+            // Update score
+            document.getElementById('score').textContent = `Score: ${formatNumber(state.score)}`;
+
+            // Update multipliers display
+            const multiplierDisplay = document.getElementById('multiplierDisplay');
+            multiplierDisplay.innerHTML = '';
+
+            if (state.multiplier1 > 1.0) {
+                const div = document.createElement('div');
+                div.className = 'multiplier-text';
+                div.textContent = `${state.multiplier1.toFixed(1)}x`;
+                multiplierDisplay.appendChild(div);
+            }
+            if (state.multiplier2 > 1.0) {
+                const div = document.createElement('div');
+                div.className = 'multiplier-text';
+                div.textContent = `${state.multiplier2.toFixed(1)}x`;
+                multiplierDisplay.appendChild(div);
+            }
+            if (state.multiplier3 > 1.0) {
+                const div = document.createElement('div');
+                div.className = 'multiplier-text';
+                div.textContent = `${state.multiplier3.toFixed(1)}x`;
+                multiplierDisplay.appendChild(div);
+            }
+            if (state.multiplier4 > 1.0) {
+                const div = document.createElement('div');
+                div.className = 'multiplier-text';
+                div.textContent = `${state.multiplier4.toFixed(1)}x`;
+                multiplierDisplay.appendChild(div);
+            }
+
+            if (state.rebirthMultiplier > 1.0) {
+                const div = document.createElement('div');
+                div.className = 'rebirth-text';
+                div.textContent = `Rebirths: ${state.rebirthTokens} (${state.rebirthMultiplier.toFixed(1)}x)`;
+                multiplierDisplay.appendChild(div);
+            }
+
+            // Update button states
+            document.getElementById('btn1').disabled = state.score < 20;
+            document.getElementById('btn2').disabled = state.score < 200;
+            document.getElementById('btn3').disabled = state.score < 2000;
+            document.getElementById('btn4').disabled = state.score < 20000;
+
+            document.getElementById('rebirthBtn').textContent = `Rebirth\n(${formatNumber(getRebirthCost())})`;
+            document.getElementById('rebirthBtn').disabled = state.score < getRebirthCost();
+
+            document.getElementById('shopBtn').textContent = `Gacha Shop\n(${state.rebirthTokens} tokens)`;
+            document.getElementById('shopBtn').disabled = state.rebirthTokens <= 0;
+
+            // Update shop tokens
+            document.getElementById('shopTokens').textContent = `Tokens: ${state.rebirthTokens}`;
+
+            // Update gacha pack buttons
+            document.getElementById('commonPack').disabled = state.rebirthTokens < 1;
+            document.getElementById('rarePack').disabled = state.rebirthTokens < 2;
+            document.getElementById('epicPack').disabled = state.rebirthTokens < 3;
+            document.getElementById('legendaryPack').disabled = state.rebirthTokens < 5;
+
+            // Save to localStorage
+            localStorage.setItem('gameState', JSON.stringify(state));
+        }
+
+        // Event listeners
+        document.getElementById('clickBtn').addEventListener('click', () => {
+            state.score += state.rebirthMultiplier * state.multiplier1 * state.multiplier2 * state.multiplier3 * state.multiplier4;
+            updateDisplay();
+        });
+
+        document.getElementById('btn1').addEventListener('click', () => {
+            if (state.score >= 20) {
+                state.score -= 20;
+                state.multiplier1 += 1.0;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('btn2').addEventListener('click', () => {
+            if (state.score >= 200) {
+                state.score -= 200;
+                state.multiplier2 += 1.0;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('btn3').addEventListener('click', () => {
+            if (state.score >= 2000) {
+                state.score -= 2000;
+                state.multiplier3 += 1.0;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('btn4').addEventListener('click', () => {
+            if (state.score >= 20000) {
+                state.score -= 20000;
+                state.multiplier4 += 1.0;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            state.score = 0;
+            state.multiplier1 = 1.0;
+            state.multiplier2 = 1.0;
+            state.multiplier3 = 1.0;
+            state.multiplier4 = 1.0;
+            updateDisplay();
+        });
+
+        document.getElementById('rebirthBtn').addEventListener('click', () => {
+            if (state.score >= getRebirthCost()) {
+                state.score = 0;
+                state.multiplier1 = 1.0;
+                state.multiplier2 = 1.0;
+                state.multiplier3 = 1.0;
+                state.multiplier4 = 1.0;
+                state.rebirthMultiplier *= 2.0;
+                state.rebirthTokens += 1;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('shopBtn').addEventListener('click', () => {
+            state.shopOpen = !state.shopOpen;
+            document.getElementById('rightPanel').style.display = state.shopOpen ? 'flex' : 'none';
+        });
+
+        document.getElementById('closeShopBtn').addEventListener('click', () => {
+            state.shopOpen = false;
+            document.getElementById('rightPanel').style.display = 'none';
+        });
+
+        document.getElementById('commonPack').addEventListener('click', () => {
+            if (state.rebirthTokens >= 1) {
+                state.rebirthTokens -= 1;
+                state.rebirthMultiplier += 0.1;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('rarePack').addEventListener('click', () => {
+            if (state.rebirthTokens >= 2) {
+                state.rebirthTokens -= 2;
+                state.rebirthMultiplier += 0.3;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('epicPack').addEventListener('click', () => {
+            if (state.rebirthTokens >= 3) {
+                state.rebirthTokens -= 3;
+                state.rebirthMultiplier += 0.8;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('legendaryPack').addEventListener('click', () => {
+            if (state.rebirthTokens >= 5) {
+                state.rebirthTokens -= 5;
+                state.rebirthMultiplier += 2.0;
+                updateDisplay();
+            }
+        });
+
+        // Load game state from localStorage
+        const savedState = localStorage.getItem('gameState');
+        if (savedState) {
+            Object.assign(state, JSON.parse(savedState));
+        }
+
+        // Initial display
+        updateDisplay();
+    </script>
+</body>
+</html>

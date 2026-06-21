@@ -1,0 +1,13 @@
+{
+  "name": "button-game",
+  "version": "1.0.0",
+  "description": "An incremental clicker game with gacha shop",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "build": "echo 'No build needed'",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": ["game", "clicker", "incremental"],
+  "author": "",
+  "license": "ISC"
+}
